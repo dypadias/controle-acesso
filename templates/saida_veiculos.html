@@ -1,0 +1,147 @@
+{% extends "base.html" %} {% block conteudo %}
+<div class="container-fluid">
+  <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">{{ nome_pagina }}</h1>
+
+    <a href="{% url 'registrar_saida' %}" class="btn btn-primary btn-icon-split btn-sm">
+        <span class="text">Registrar Saída</span>
+        <span class="icon text-white-50">
+              <i class="fas fa-user-plus"></i>
+        </span>
+    </a>
+  </div>
+
+  {% if messages %}
+      {% for mensagem in messages %}
+          <div class="alert alert-success" role="alert">
+              {{ mensagem }}
+          </div>
+      {% endfor %}
+  {% endif %}
+
+  <div class="row">
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-left-warning shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div
+                class="text-xs font-weight-bold text-warning text-uppercase mb-1"
+              >
+                Veiculos fora da empresa
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">{{ veiculos_fora }}</div>
+            </div>
+
+            <div class="col-auto">
+              <i class="fas fa-user-lock fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-left-primary shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div
+                class="text-xs font-weight-bold text-primary text-uppercase mb-1"
+              >
+                Veiculos na empresa
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">{{ veiculos_empresa }}</div>
+            </div>
+
+            <div class="col-auto">
+              <i class="fas fa-user-clock fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-left-success shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div
+                class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                todas saidas
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">5</div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-user-check fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-left-info shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div
+                class="text-xs font-weight-bold text-info text-uppercase mb-1"
+              >
+                Saidas de veículos no mes atual
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">{{ saidas_mes }}</div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-users fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card shadow mb-4">
+    <div
+      class="card-header py-3 d-sm-flex align-items-center justify-content-between mb-4"
+    >
+      <h6 class="m-0 font-weight-bold text-primary">Saídas recentes</h6>
+    </div>
+
+    <div class="card-body d-flex ">
+      <div class="table table-responsive ">
+        <table class="table table-bordered table-striped ">
+          <thead class="table-primary">
+            <th>Veículo</th>
+            <th>Saída</th>
+            <th>Retorno</th>
+            <th>Status</th>
+            <th>Motorista</th>
+            <th>Destino</th>
+            <th>Mais informações</th>
+          </thead>
+
+          <tbody >
+            {%for veiculo in todas_saidas %}
+            {% if veiculo.status == "NA_EMPRESA" %}
+               <tr class= "table-success" >
+            {% endif %}
+                      <td>{{ veiculo.veiculo }}</td>
+                      <td >{{ veiculo.get_horario_saida|date:"SHORT_DATETIME_FORMAT" }}</td>
+                      <td >{{ veiculo.get_horario_chegada|date:"SHORT_DATETIME_FORMAT"}}</td>
+                      <td>{{ veiculo.get_status_display }}</td>
+                      <td>{{ veiculo.nome_motorista }}</td>
+                      <td>{{ veiculo.destino }}</td>  
+                      <td>
+                    <a href="{% url 'informacoes_saida' id=veiculo.id %}"> Ver informações </a>
+                  </td>
+              </tr> 
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock conteudo %}

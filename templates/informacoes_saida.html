@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+
+{% load widget_tweaks %}
+
+{% block conteudo %}
+<div class="container">
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">{{ nome_pagina }}</h1>
+
+        <div>
+           {% comment %} {% if veiculo.status == "NA_EMPRESA" %}
+                <a href="#" class="btn btn-success btn-icon-split btn-sm" data-toggle="modal" data-target="#modal1"> 
+                    <span class="icon text-white-50">Autorizar entrada </span>
+                        <i class="fas fa-user-check"></i>
+                
+                </a>
+            {% endif %}{% endcomment %}
+
+            {% if veiculo.status == "NA_RUA" %}
+                <a href="#" class="btn btn-warning btn-icon-split btn-sm" data-toggle="modal" data-target="#modal2"> 
+                    <span class="icon text-white-50">Registrar retorno </span>
+                        <i class="fas fa-door-open"></i>
+                
+                </a>
+            {% endif %}
+        </div>
+
+    </div>
+    
+    <div class="card shadow mb-4">        
+        <div class="card-body">
+            <h4 class="mb-3 text-primary">
+                Informações gerais
+            </h4>
+        
+            <form>
+                <div class="form-row">
+                   
+
+                    <div class="form-group col-md-4">
+                        <label>Status</label>
+                        <input type="text" class="form-control" value="{{ veiculo.get_status_display }}" disabled>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    
+                   
+                    <div class="form-group col-md-4">
+                        <label>Horário de saída</label>
+                        <input type="text" class="form-control" value="{{ veiculo.get_horario_saida }}" disabled>
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        <label>Horário retorno</label>
+                        <input type="text" class="form-control" value="{{ veiculo.get_horario_chegada }}" disabled>
+                    </div>
+
+                    <div class="form-group col-md-6">
+                        <label>Placa do veículo</label>
+                        <input type="text" class="form-control" value="{{ veiculo.get_placa_veiculo|upper }}" disabled>
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        <label>Destino</label>
+                        <input type="text" class="form-control" value="{{ veiculo.destino }}" disabled>
+                    </div>
+                    
+                </div>
+            </form>
+        
+            <h4 class="mb-3 mt-4 text-primary">
+                Informações pessoais
+            </h4>
+            
+            <form>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label>Nome motorista</label>
+                        <input type="text" class="form-control" value="{{ veiculo.nome_motorista }}" disabled>
+                    </div>
+
+                </div>
+
+               
+            </form>
+                    
+            <p class="mr-2 mt-3 mb-4 text-right">
+                <small>
+                    Saída registrada em "{{ veiculo.horario_saida }}" por "{{ veiculo.registrado_por }}"
+                </small>
+            </p>
+        
+            <div class="mr-1 text-right">
+                <a href="{% url 'saida_veiculos' %}" class="btn btn-secondary text-white" type="button">
+                    <span class="text">Voltar</span>
+                </a>
+            </div>
+        </div>
+    </div>
+        <div class="modal fade" id="modal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Confirmar saída</h5>
+                        
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    
+                    <div class="modal-body">
+                        <form method="post">
+                            {% csrf_token %}
+
+                            <div class="form-group">
+                                <label for="id_morador_responsavel" class="col-form-label">Nome do morador responsável por autorizar a entrada do visitante:</label>
+                                {% render_field form.morador_responsavel placeholder="Nome do morador responsável por autorizar a entrada do visitante" class="form-control" %}
+                            </div>
+                                
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                <button type="submit" class="btn btn-primary">Autorizar entrada</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="modal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Registrar retorno</h5>
+                            
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    
+                    <div class="modal-body">
+                        <div class="modal-body">
+                            <h5 class="mb-3">
+                                Realmente deseja registrar o retorno?
+                            </h5>
+
+                            <form method="post" action="{% url 'veiculo_retorno' id=veiculo.id %}">
+                                {% csrf_token %}
+
+                                <input hidden>
+
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                    <button type="submit" class="btn btn-primary">Registrar retorno</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+        </div>
+    </div>       
+</div>
+{% endblock %}
