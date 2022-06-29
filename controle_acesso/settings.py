@@ -1,5 +1,6 @@
 import os
 import sys
+import  django_heroku
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -14,7 +15,7 @@ SECRET_KEY = '5%v@#=m4*()!a%-0ii8_2$as7$+_5%pnr2542q&%tl^h1(rlc3'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['https://matos-controle-acesso.herokuapp.com/']
 
 sys.path.append(
     os.path.join(BASE_DIR, "apps")
@@ -132,5 +133,9 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static")
 ]
 
+STATIC_ROOT = os.path.join('static')
+
 LOGIN_URL = "login"
 LOGIN_REDIRECT_URL = "index"
+
+django_heroku.settings(locals())
